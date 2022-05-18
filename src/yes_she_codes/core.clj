@@ -1,4 +1,5 @@
 (ns yes-she-codes.core
+  (:use [clojure pprint])
   (:require [yes-she-codes.cliente :as ysc.cliente]
             [yes-she-codes.cartao :as ysc.cartao]
             [yes-she-codes.compra :as ysc.compra]
@@ -11,7 +12,3 @@
 ;(println clientes)
 ;(println cartoes)
 ;(println compras)
-
-(def teste (ysc.funcoes/agrupar-categoria compras))
-
-(println teste)
