@@ -1,15 +1,18 @@
 (ns yes-she-codes.cartao
   (:require [java-time :as t]
-            [yes-she-codes.arquivo :as ysc.arquivo]))
+            [yes-she-codes.arquivo :as ysc.arquivo]
+            [yes-she-codes.funcoes :as ysc.funcoes]))
 
 (def repositorio-de-cartao(atom []))
 
-(defrecord Cartao [ID Numero CVV Validade Limite Cliente])
+(defrecord Cartao [ID Numero CVV Validade Limite IDCliente])
 
 (defn insere-cartao
   "Insere um novo cartão no array"
   [cartoes cartao]
-  (let [id (inc (count cartoes))
+  (let [id (if-not (empty? cartoes)
+             (+ 1 (apply max (map :ID cartoes)))
+             1)
         cartao-inserir (assoc cartao :ID id)]
     (conj cartoes cartao-inserir)))
 
@@ -20,23 +23,23 @@
 
 (defn novo-cartao
   "criar uma estrutura de cartao"
-  [numero cvv validade limite cliente]
+  [numero cvv validade limite cliente clientes]
   {:Numero (Long/valueOf (clojure.string/replace numero #" " ""))
    :CVV (Long/valueOf cvv)
    :Validade (t/local-date (str validade "-01"))
    :Limite (read-string limite)
-   :Cliente cliente})
+   :IDCliente (get (ysc.funcoes/pesquisa-cliente-por-cpf cliente clientes) :ID)})
 
 (defn adiciona-cartao
   "Adicionar um novo cartão"
-  [item]
-  (novo-cartao (get item 0 "") (get item 1 "") (get item 2 "") (get item 3 "") (get item 4 ""))
+  [item clientes]
+  (novo-cartao (get item 0 "") (get item 1 "") (get item 2 "") (get item 3 "") (get item 4 "") clientes)
   )
 
 (defn lista-cartoes
   "Lista os cartões"
-  []
-  (map adiciona-cartao (ysc.arquivo/carrega-csv "cartoes.csv")))
+  [clientes]
+  (map #(adiciona-cartao %1 clientes) (ysc.arquivo/carrega-csv "cartoes.csv")))
 
 (defn lista-cartoes!
   "Lista os cartões no atomo"

@@ -8,7 +8,9 @@
 (defn insere-cliente
   "criar uma estrutura de compra"
   [clientes cliente]
-  (let [id (inc (count clientes))
+  (let [id (if-not (empty? clientes)
+             (+ 1 (apply max (map :ID clientes)))
+             1)
         cliente-inserir (assoc cliente :ID id)]
     (conj clientes cliente-inserir)))
 

@@ -22,10 +22,10 @@
   [estabelecimento compras]
   (filter #(= estabelecimento (get %1 :Estabelecimento)) compras))
 
-(defn pesquisa-compra-por-cartao
+(defn pesquisa-compra-por-id-cartao
   "Buscar uma lista de comprar por um mes especifico"
-  [cartao compras]
-  (filter #(= cartao (get %1 :Cartao)) compras))
+  [idcartao compras]
+  (filter #(= idcartao (get %1 :IDCartao)) compras))
 
 (defn total-gasto-no-mes
   "Total de gastos em um mes"
@@ -43,3 +43,18 @@
   (->> Compras
        (group-by :Categoria)
        (map (fn [[chave compras]] {:Categoria chave :Valor (reduce + (map :Valor compras))}))))
+
+(defn pesquisa-cliente-por-nome
+  "Buscar uma lista de comprar por um mes especifico"
+  [nome clientes]
+  (filter #(= nome (get %1 :Nome)) clientes))
+
+(defn pesquisa-cliente-por-cpf
+  "Buscar uma lista de comprar por um mes especifico"
+  [cpf clientes]
+  (first (filter #(= cpf (get %1 :CPF)) clientes)))
+
+(defn pesquisa-cartao-por-numero
+  "Buscar uma lista de comprar por um mes especifico"
+  [numero cartoes]
+  (first (filter #(= numero (get %1 :Numero)) cartoes)))
